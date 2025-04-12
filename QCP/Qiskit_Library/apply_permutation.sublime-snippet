@@ -1,0 +1,35 @@
+<snippet>
+	<content><![CDATA[
+# Adds up to 4 * n * 2**n circuit depth
+# Requires apply_stateswap
+def apply_permutation(qc, p, option = "cycle"):
+	assert option in ["cycle", "list"]
+	n = qc.num_qubits
+	cycles = []
+	if option == "cycle":
+		cycles = p[:]
+	elif option == "list":
+		assert sorted(p) == list(range(len(p)))
+		vis = [False] * len(p)
+		for x in range(len(p)):
+			if vis[x]:
+				continue
+			cycle = []
+			while not vis[x]:
+				vis[x] = True
+				cycle.append(x)
+				x = p[x]
+			cycles.append(cycle)
+	else:
+		assert False
+	ops = 2
+	for cycle in cycles:
+		for i in reversed(range(len(cycle) - 1)):
+			apply_stateswap(qc, cycle[i], cycle[i + 1])
+	return qc
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>apply_permutation</tabTrigger> -->
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>source.python</scope> -->
+</snippet>

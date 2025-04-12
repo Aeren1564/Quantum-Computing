@@ -1,0 +1,27 @@
+<snippet>
+	<content><![CDATA[
+# Adds up to 4 * n circuit depth
+def apply_stateswap(qc, x, y):
+	n = qc.num_qubits
+	assert 0 <= min(x, y) and max(x, y) < 2**n
+	if x == y:
+		return qc
+	diff = [i for i in range(n) if (x ^ y) >> i & 1]
+	last_mask = 0
+	for i in diff + list(reversed(diff[:-1])):
+		cur_mask = ~x & (2**i - 1) | ~y & (2**n - 2**(i + 1))
+		for j in range(n):
+			if (last_mask ^ cur_mask) >> j & 1:
+				qc.x(j)
+		qc.mcx(list(j for j in range(n) if i != j), i)
+		last_mask = cur_mask
+	for j in range(n):
+		if last_mask >> j & 1:
+			qc.x(j)
+	return qc
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>apply_stateswap</tabTrigger> -->
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>source.python</scope> -->
+</snippet>
