@@ -1,8 +1,13 @@
 def pretty_print_real_number(x):
 	eps = 0.00001
-	xi = round(x)
-	if abs(x - xi) <= eps:
-		print(xi, end = "")
+	for d in range(1, 1000):
+		xi = round(d * x)
+		if abs(d * x - xi) <= eps:
+			if d == 1:
+				print(xi, end = "")
+			else:
+				print(str(xi) + "/" + str(d), end = "")
+			break
 	else:
 		print(x, end = "")
 def pretty_print_complex_number(x):
